@@ -1,5 +1,6 @@
 package com.example.url_shortener.application;
 
+import java.util.zip.CRC32;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,9 +15,15 @@ public class ShortenUrlService {
 
     public String execute(String longUrl) {
 
+        CRC32 crc = new CRC32();
+        crc.update(longUrl.getBytes());
+        String enc = Long.toHexString(crc.getValue());
+
+
         UrlEntry urlEntry = new UrlEntry();
         urlEntry.setLongUrl(longUrl);
-        urlEntry.setShortUrl("todo");
+        // TODO Need to consider collision
+        urlEntry.setShortUrl(enc);
 
         urlEntryRepository.save(urlEntry);
         return "OK";
