@@ -1,5 +1,17 @@
 # url-shortener
 
+## Run
+
+```bash
+docker compose up -d
+./mvnw spring-boot:run
+
+# Or build JAR
+./mvnw clean package -DskipTests
+java -jar target/url-shortener-0.0.1-SNAPSHOT.jar
+
+```
+
 ## Decisions
 
 ### ID Strategy
