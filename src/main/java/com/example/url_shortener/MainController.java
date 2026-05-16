@@ -17,6 +17,7 @@ import com.example.url_shortener.application.errors.ApiError;
 import com.example.url_shortener.application.errors.ShortCodeCollisionException;
 import com.example.url_shortener.application.errors.ShortUrlNotFoundException;
 import com.example.url_shortener.dtos.ShortenUrlRequest;
+import com.example.url_shortener.dtos.ShortenUrlResponse;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,11 +41,12 @@ public class MainController {
 
 
     @PostMapping("shorten")
-    public String shorten(@Valid @RequestBody ShortenUrlRequest shortenUrlRequest) {
+    public ShortenUrlResponse shorten(@Valid @RequestBody ShortenUrlRequest shortenUrlRequest) {
 
         String result = shortenUrlService.execute(shortenUrlRequest.url());
 
-        return "%s/%s".formatted(baseUrl, result);
+        String shortUrl = "%s/%s".formatted(baseUrl, result);
+        return new ShortenUrlResponse(shortUrl);
     }
 
 
