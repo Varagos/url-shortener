@@ -7,7 +7,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 
-public interface UrlEntryRepository extends CrudRepository<UrlMapping, UUID> {
+public interface UrlMappingRepository extends CrudRepository<UrlMapping, UUID> {
     Optional<UrlMapping> findByShortCode(String shortCode);
 
 
