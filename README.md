@@ -52,6 +52,8 @@ First we need the url's icrement counter. E.g. $11157_{10}$
 
 Worth noting that with hashing, same input would always produce same short code. 
 
+### Redirect Strategy
+We use `302 Found` (temporary redirect) rather than `301 Moved Permanently`. A 301 is cached by the browser, subsequent requests for the same short code bypass our server entirely and go straight to the destination. A 302 ensures every request passes through us, enabling future click analytics, referrer tracking, and the ability to update or expire destination URLs. The tradeoff is a small latency cost per redirect, which a caching layer (e.g. Redis) would mitigate at scale.
 
 ### Error Handling
 
