@@ -9,8 +9,11 @@ import com.example.url_shortener.infra.UrlMappingRepository;
 @Service
 public class ExpandShortUrlService {
 
-    @Autowired
     private UrlMappingRepository urlMappingRepository;
+
+    public ExpandShortUrlService(UrlMappingRepository urlMappingRepository) {
+        this.urlMappingRepository = urlMappingRepository;
+    }
 
     public String execute(String shortUrl) {
         UrlMapping urlEntry = urlMappingRepository.findByShortCode(shortUrl)
