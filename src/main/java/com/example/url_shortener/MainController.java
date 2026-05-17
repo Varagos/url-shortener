@@ -1,7 +1,6 @@
 package com.example.url_shortener;
 
 import java.net.UnknownHostException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -30,14 +29,18 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping(path = "/")
 public class MainController {
 
-    @Autowired
     private ShortenUrlService shortenUrlService;
-
-    @Autowired
     private ExpandShortUrlService expandShortUrlService;
 
     @Value("${app.base-url}")
     private String baseUrl;
+
+    public MainController(ShortenUrlService shortenUrlService,
+            ExpandShortUrlService expandShortUrlService) {
+        this.shortenUrlService = shortenUrlService;
+        this.expandShortUrlService = expandShortUrlService;
+    }
+
 
 
     @PostMapping("shorten")
