@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>URL Shortener | Result</title>
+</head>
+<body>
+    <h1>Result</h1>
+    <p>
+        Short:
+        <a th:href="${urlMapping.shortUrl}" th:text="${urlMapping.shortUrl}"></a>
+    </p>
+    <p th:text="'OriginalURL: ' + ${urlMapping.longUrl}" />
+    <a href="/urls">Submit another URL</a>
+
+    <a href="/urls/all">View all shortened URLs</a>
+
+</body>
+</html>
