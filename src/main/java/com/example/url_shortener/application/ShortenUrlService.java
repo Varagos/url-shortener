@@ -2,6 +2,7 @@ package com.example.url_shortener.application;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.resilience.annotation.Retryable;
 import org.springframework.stereotype.Service;
 import com.example.url_shortener.application.errors.ShortCodeCollisionException;
 import com.example.url_shortener.application.shortcode.ShortCodeGenerator;
@@ -22,26 +23,20 @@ public class ShortenUrlService {
         this.urlEntryRepository = urlMappingRepository;
     }
 
+    // throw new ShortCodeCollisionException(MAX_RETRIES);
+    @Retryable(includes = DataIntegrityViolationException.class, maxRetries = MAX_RETRIES - 1, delay = 0)
     public String execute(String originalUrl) {
-        for (int attempt = 0; attempt < MAX_RETRIES; attempt++) {
 
-            String normalizedOriginalUrl = normalizeUrl(originalUrl);
+        String normalizedOriginalUrl = normalizeUrl(originalUrl);
 
-            String shortCode = shortCodeGenerator.generate(normalizedOriginalUrl);
+        String shortCode = shortCodeGenerator.generate(normalizedOriginalUrl);
 
-            try {
+        UrlMapping urlEntry = new UrlMapping();
+        urlEntry.setOriginalUrl(normalizedOriginalUrl);
+        urlEntry.setShortCode(shortCode);
 
-                UrlMapping urlEntry = new UrlMapping();
-                urlEntry.setOriginalUrl(normalizedOriginalUrl);
-                urlEntry.setShortCode(shortCode);
-
-                urlEntryRepository.save(urlEntry);
-                return shortCode;
-            } catch (DataIntegrityViolationException e) {
-                // shortCode collision, retry
-            }
-        }
-        throw new ShortCodeCollisionException(MAX_RETRIES);
+        urlEntryRepository.save(urlEntry);
+        return shortCode;
     }
 
     private String normalizeUrl(String url) {
@@ -50,6 +45,5 @@ public class ShortenUrlService {
         }
         return url;
     }
-
 
 }
